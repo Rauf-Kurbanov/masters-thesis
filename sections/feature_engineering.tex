@@ -1,0 +1,50 @@
+\documentclass[../diploma.tex]{subfiles}
+ 
+ \begin{document}
+ 
+Нужно было придумать фичи для передачи в качесте local condition. Они должны представлять из себя какие-то характеристики речи, которые будут связывать её с произносимым тесктом. Самый навивный и первый приходящий на ум способ это использовать сам текст. Но в таком случае возникает две проблемы:
+
+Первая: нужно выбрать способ кодирования текста. В качетсве baseline реализации было решено привести каждое слово к его hashcode'у, которые потом закодировать one-hot-encoder'ом. 
+
+Вторая: нужно выровнять текст вдоль звука. Тут мы тоже воспользовались самым простым подходом и просто растянули слова, дублирая буквы вдоль звукового сигнала.
+
+У такого подхода куча есть очевидные минусы, от одного из которых понятно, как избавиться, а от второго не очень. Дело в том, что по идее сам текст несёт очень мало информации о том, как его надо произносить. Для нейросети сырой текст это очень низкоуровневое представление с точки зрения произношения. Да и энекодер у нас, честно говоря, сомнительный. Поэтому хотелось бы передавать что-то более высокоуровевое, например, морфемы. 
+
+Но потом меня осенила классная идея: а почему бы не передать ещё более высокоуровевое представление так, чтобы оно избавило меня от необходимости извлекать форфемы. Тут я и догададался в качестве фичи, использовать текст сгенерированный открытым speech-kit'ом. В моём случае это был yandex-speech-kit, для генерации мы использовали голос по умолчанию jane. Бесплатный доступ к speech-kit есть только в образовательных целях и всё равно ограничен, пользователю даётся некоторый лимит на количество генераций. Благо в корпусе VCTK очень часто используются одни и те же фразы, поэтмоу создав глобальную хеш-таблицу всех фраз, мы могли запоминать, для каких фраз мы уже сгенерировали речь и переиспользовать её.
+
+\subsection{PyAudioAnalysis features}
+    dsdf
+        %     Фичи извлекал двумя разными фреймворками. На данный момент используется следующий набор фич https://github.com/tyiannak/pyAudioAnalysis/wiki/3.-Feature-Extraction. Фичи извлекались фреймами по 10 ms без пересечений, но также дублировались фичами по фреймам по 100ms c шагом 10ms, т.е. с перечечениями, причём с заглядыванием как вперёд так и назад.
+
+        % Фичи извлеченные с помощью python_speech_features довольно сильно пересекались с финальными, однако результаты на них были похуже да и сами фичи кореллировали. В итоге решил их не использовать.
+
+\begin{table}[]
+\centering
+\caption{My caption}
+\label{my-label}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Feature id} & \textbf{Feature Name} & \textbf{Description}                                                                                                                                                                                    \\ \hline
+1                   & Zero Crossing Rate    & \begin{tabular}[c]{@{}l@{}}The rate of sign-changes of the signal during the\\  duration of a particular frame.\end{tabular}                                                                            \\ \hline
+2                   & Energy                & \begin{tabular}[c]{@{}l@{}}The sum of squares of the signal values, normalized \\ by the respective frame length.\end{tabular}                                                                          \\ \hline
+3                   & Entropy of Energy     & \begin{tabular}[c]{@{}l@{}}The entropy of sub-frames' normalized energies. It can \\ be interpreted as a measure of abrupt changes.\end{tabular}                                                        \\ \hline
+4                   & Spectral Centroid     & The center of gravity of the spectrum.                                                                                                                                                                  \\ \hline
+5                   & Spectral Spread       & The second central moment of the spectrum.                                                                                                                                                              \\ \hline
+6                   & Spectral Entropy      & \begin{tabular}[c]{@{}l@{}}Entropy of the normalized spectral energies for a set of \\ sub-frames.\end{tabular}                                                                                         \\ \hline
+7                   & Spectral Flux         & \begin{tabular}[c]{@{}l@{}}The squared difference between the normalized magnitudes \\ of the spectra of the two successive frames.\end{tabular}                                                        \\ \hline
+8                   & Spectral Rolloff      & \begin{tabular}[c]{@{}l@{}}The frequency below which 90\% of the magnitude distribution \\ of the spectrum is concentrated.\end{tabular}                                                                \\ \hline
+9-21                & MFCCs                 & \begin{tabular}[c]{@{}l@{}}Mel Frequency Cepstral Coefficients form a cepstral representation \\ where the frequency bands are not linear but distributed according \\ to the mel-scale.\end{tabular}   \\ \hline
+22-33               & Chroma Vector         & \begin{tabular}[c]{@{}l@{}}A 12-element representation of the spectral energy where the bins\\  represent the 12 equal-tempered pitch classes of western-type\\  music (semitone spacing).\end{tabular} \\ \hline
+34                  & Chroma Deviation      & The standard deviation of the 12 chroma coefficients.                                                                                                                                                   \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Голосовые признаки}
+fdssssssssssssssssssssssg
+
+\subsection{Выравнивание аудио}
+В общем случае выравнять два временных ряда на одинаковую длину это не совсем тривиальная задача. Однако, в нашем случае, мы можем обойти эту проблему, варирую sampling rate при чтении аудио. Обозначим длины оригинального и сгенерированного аудио как $LEN_{orig}$ и $LEN_{gen}$ соответсвенно при sampling rate  =  16000. Тогда чтобы получить временные ряды одинаковой длины считаем ещё раз сгерерированное аудио отномрмиров sampling rate на величину $\frac{LEN_{orig}}{LEN_{gen}}$. Скорее всего у нас где-то возникнут погрешности из-за деления, исправим их механически, просто выкинув фрейм из конца.
+
+
+\end{document}
+

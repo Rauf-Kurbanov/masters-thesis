@@ -1,0 +1,121 @@
+% В этом шаблоне используется класс spbau-diploma. Его можно найти и, если требуется, 
+% поправить в файле spbau-diploma.cls
+\documentclass{spbau-diploma}
+
+\usepackage{wasysym }
+\usepackage{subfiles}
+\usepackage{enumitem}
+
+% \usepackage{titlesec}
+% \newcommand{\sectionbreak}{\clearpage}
+
+\begin{document}
+% Год, город, название университета и факультета предопределены,
+% но можно и поменять.
+% Если англоязычная титульная страница не нужна, то ее можно просто удалить.
+\filltitle{ru}{
+    chair              = {Кафедра математических и информационных технологий},
+    title              = {Генерация речи с учётом индивидуальных особенностей},
+    % Здесь указывается тип работы. Возможные значения:
+    %   coursework - Курсовая работа
+    %   diploma - Диплом специалиста
+    %   master - Диплом магистра
+    %   bachelor - Диплом бакалавра
+    type               = {master},
+    position           = {студента},
+    group              = 604,
+    author             = {Курбанов Рауф Эльшад оглы},
+    supervisorPosition = {},
+    supervisor         = {Шпильман А.\,А.},
+    reviewerPosition   = {},
+    reviewer           = {Тузова Е.\,А.},
+    chairHeadPosition  = {д.\,ф.-м.\,н., профессор},
+    chairHead          = {Омельченко А.\,В.},
+    % university = {САНКТ-ПЕТЕРБУРГСКИЙ АКАДЕМИЧЕСКИЙ УНИВЕРСИТЕТ},
+    % faculty = {Центр высшего образования},
+    % city = {Санкт-Петербург},
+    % year             = {2013}
+}
+\filltitle{en}{
+    chair              = {Department of Mathematics and Information Technology},
+    title              = {Speech generation with individual characteristics},
+    author             = {Rauf Kurbanov},
+    supervisorPosition = {},
+    supervisor         = {Alexey Shpilman},
+    reviewerPosition   = {},
+    reviewer           = {Ekaterina Tuzova},
+    chairHeadPosition  = {professor},
+    chairHead          = {Alexander Omelchenko},
+}
+\maketitle
+\tableofcontents
+% У введения нет номера главы
+% \section*{Abstract}
+% \subfile{sections/abstract}
+
+\section*{Введение}
+\input{sections/introduction}
+% \subfile{sections/introduction}
+
+\section{Мотивация}
+\subfile{sections/motivation}
+
+\section{Генеративные модели}
+\subfile{sections/generative_models}
+
+\section{Обзор решений}
+\subfile{sections/existing_solutions}
+
+\section{Wavenet}
+\subfile{sections/wavenet}
+
+\section{Задачи}
+\subfile{sections/goals}
+
+\section{WaveNet с условием}
+\subfile{sections/conditional_wavenet}
+
+\section{Датасет}
+В качестве данных в данной работе использовался корпус CSTR VCTK[ссыль], размещённый в открытом доступе. Корпус CSTR VCTK включает в себя речь, произнесённую 109 нативными носителями английского языка с разнообрадными акцентами. Каждый оратор зачитывает около 400 предложений, выбранных из газет плюс специалные отрывки, подобранные чтобы подчеркнуть акцент говорящего. 
+
+К каждой голосовой записи прилагается текст, однако текст не выровнен по аудио как если бы это были субтитры. Всё что у нас есть это набор звуковых файлов в формате \.wav с соответсвуюшим какждому .txt файлом.
+Тот факт, что данные невыровнены имеет большое значение, т.к. это сильно усложнит нам задачу выравнивания признаков выделенных из текста вдоль соответсвующих участков аудио.
+
+Продолжительность аудио варируется от 1 до 11 секунд со стандартным отклонением около секунды, что более чем достаточно для нашей задачи, т.к. генерация даже небольших звуковых файлов занимает достаточно много времени на машине, которую мы использовали для поставновки экспериментов.
+
+
+\section{Реализация}
+\subfile{sections/implementation}
+
+\newpage
+\section{Генерация}
+\begin{figure}[h!]
+  \includegraphics[scale=0.6]{img/compare}
+  \caption{Сравнение сгенерированного сигнала с сигналом из обучающей выбоки}
+  \label{fig:perf}
+\end{figure}
+
+
+% \section{Тестирование}
+\newpage
+\section{Feature engineering}
+\subfile{sections/feature_engineering}
+
+\section{Performance}
+Время обучения растёт линейно относительно ширины сети. То есть линейно от количества признаков, которые мы передаём в локальном условии. Значит мы не можем закидывать слишком много фич, потому что нам мощности не позволяют.
+
+\begin{figure}[h!]
+  \includegraphics[scale=0.36]{img/perf}
+  \caption{Изменение функции потерь в процессе обучения}
+  \label{fig:perf}
+\end{figure}
+
+
+
+\section{Результаты}
+На самом деле в задаче генерации трудно использовать какую-то строгую метрику для оценки качества результатоы. Да, можно в каком-то смысле считать расстояние от сгенерированного текста до настоящего, но вообще говоря сгененрировать точно такой же текст не стояло нашей задачей. Даже авторы статьи сипользовали специальную метрику.[напиши про метрику] 
+\subsection{Какие-то цифры}
+
+\bibliographystyle{ugost2008ls}
+\bibliography{diploma.bib}
+\end{document}
