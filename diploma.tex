@@ -1,8 +1,7 @@
-% В этом шаблоне используется класс spbau-diploma. Его можно найти и, если требуется, 
+% В этом шаблоне используется класс spbau-diploma. Его можно найти и, если требуется,n
 % поправить в файле spbau-diploma.cls
 \documentclass{spbau-diploma}
-
-\usepackage{wasysym }
+\usepackage{wasysym}
 \usepackage{subfiles}
 \usepackage{enumitem}
 
@@ -62,16 +61,10 @@
 }
 \maketitle
 \tableofcontents
-% У введения нет номера главы
-% \section*{Abstract}
-% \subfile{sections/abstract}
 
 \section*{Введение}
-% \section{Генеративные модели}
-% \subfile{sections/generative_models}
+\subfile{sections/introduction}
 
-\input{sections/introduction}
-% \subfile{sections/introduction}
 \subsection*{Мотивация}
 \label{sec:motivation}
 \subfile{sections/motivation}
