@@ -6,6 +6,19 @@
 \usepackage{subfiles}
 \usepackage{enumitem}
 
+% \usepackage[utf8]{inputenc}
+% \usepackage[english]{babel}
+ 
+% \usepackage{amsthm}
+
+\newtheorem{theorem}{Теорема}[section]
+\newtheorem{remark}{Замечание}[section]
+\newtheorem{corollary}{Следствие}[section]
+\newtheorem{lemma}[theorem]{Лемма}
+\newtheorem{definition}{Определение}[section]
+\newtheorem{assumption}{Предположение}
+\newtheorem{observation}{Наблюдение}
+
 % \usepackage{titlesec}
 % \newcommand{\sectionbreak}{\clearpage}
 
@@ -54,67 +67,51 @@
 % \subfile{sections/abstract}
 
 \section*{Введение}
+% \section{Генеративные модели}
+% \subfile{sections/generative_models}
+
 \input{sections/introduction}
 % \subfile{sections/introduction}
-
-\section{Мотивация}
+\subsection*{Мотивация}
+\label{sec:motivation}
 \subfile{sections/motivation}
 
-\section{Генеративные модели}
-\subfile{sections/generative_models}
-
 \section{Обзор решений}
+\label{sec:motivation}
+
 \subfile{sections/existing_solutions}
 
-\section{Wavenet}
+\section{WaveNet}
+\label{sec:wavenet}
 \subfile{sections/wavenet}
 
-\section{Задачи}
-\subfile{sections/goals}
-
-\section{WaveNet с условием}
+\subsection{WaveNet с условием}
+\label{sec:conditional_wavenet}
 \subfile{sections/conditional_wavenet}
 
-\section{Датасет}
-В качестве данных в данной работе использовался корпус CSTR VCTK[ссыль], размещённый в открытом доступе. Корпус CSTR VCTK включает в себя речь, произнесённую 109 нативными носителями английского языка с разнообрадными акцентами. Каждый оратор зачитывает около 400 предложений, выбранных из газет плюс специалные отрывки, подобранные чтобы подчеркнуть акцент говорящего. 
-
-К каждой голосовой записи прилагается текст, однако текст не выровнен по аудио как если бы это были субтитры. Всё что у нас есть это набор звуковых файлов в формате \.wav с соответсвуюшим какждому .txt файлом.
-Тот факт, что данные невыровнены имеет большое значение, т.к. это сильно усложнит нам задачу выравнивания признаков выделенных из текста вдоль соответсвующих участков аудио.
-
-Продолжительность аудио варируется от 1 до 11 секунд со стандартным отклонением около секунды, что более чем достаточно для нашей задачи, т.к. генерация даже небольших звуковых файлов занимает достаточно много времени на машине, которую мы использовали для поставновки экспериментов.
+\section{Основные цели}
+\label{sec:goals}
+\subfile{sections/goals}
 
 
-\section{Реализация}
+\section{Методы и реализация}
+
+\subsection{Описание данных}
+\label{sec:data}
+\subfile{sections/data}
+
+\label{sec:implementation}
 \subfile{sections/implementation}
 
 \newpage
-\section{Генерация}
-\begin{figure}[h!]
-  \includegraphics[scale=0.6]{img/compare}
-  \caption{Сравнение сгенерированного сигнала с сигналом из обучающей выбоки}
-  \label{fig:perf}
-\end{figure}
+\section{Обсуждение результатов}
+\label{sec:experiments}
+\subfile{sections/experiments}
 
 
-% \section{Тестирование}
-\newpage
-\section{Feature engineering}
-\subfile{sections/feature_engineering}
-
-\section{Performance}
-Время обучения растёт линейно относительно ширины сети. То есть линейно от количества признаков, которые мы передаём в локальном условии. Значит мы не можем закидывать слишком много фич, потому что нам мощности не позволяют.
-
-\begin{figure}[h!]
-  \includegraphics[scale=0.36]{img/perf}
-  \caption{Изменение функции потерь в процессе обучения}
-  \label{fig:perf}
-\end{figure}
-
-
-
-\section{Результаты}
-На самом деле в задаче генерации трудно использовать какую-то строгую метрику для оценки качества результатоы. Да, можно в каком-то смысле считать расстояние от сгенерированного текста до настоящего, но вообще говоря сгененрировать точно такой же текст не стояло нашей задачей. Даже авторы статьи сипользовали специальную метрику.[напиши про метрику] 
-\subsection{Какие-то цифры}
+\section{Заключение}
+\label{sec:results}
+\subfile{sections/results}
 
 \bibliographystyle{ugost2008ls}
 \bibliography{diploma.bib}
